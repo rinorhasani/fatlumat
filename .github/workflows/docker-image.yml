@@ -25,8 +25,16 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
-          
+        run:  
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_vm
+          chmod 600 ~/.ssh/id_vm
+          # Pin server keys into known_hosts (ed25519,rsa,ecdsa)
+          ssh-keyscan -H -t ed25519,rsa,ecdsa "$SSH_HOST" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          ssh-keygen -lf ~/.ssh/known_hosts || true
           
 
+  
 
   
