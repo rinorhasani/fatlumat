@@ -12,4 +12,21 @@ env:
   APP_DIR: /opt/apps/testing 
   PROJECT_NAME: ${{ github.event.repository.name }}
 
+jobs: 
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup SSH key
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          
+          
+
+
   
