@@ -1,0 +1,15 @@
+name: Deploying to Fatlumat VM
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: 
+
+permissions: 
+  contents: read
+
+env: 
+  APP_DIR: /opt/apps/testing 
+  PROJECT_NAME: ${{ github.event.repository.name }}
+
+  
