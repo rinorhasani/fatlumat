@@ -36,7 +36,9 @@ jobs:
           ssh-keygen -lf ~/.ssh/known_hosts || true
           # Example: verify connectivity (optional)
           # ssh -i ~/.ssh/id_vm "$SSH_USER@$SSH_HOST" 'echo ok'
-
-
-
           
+      - name: prepare remote dir
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+       
