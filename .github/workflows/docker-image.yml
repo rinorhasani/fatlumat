@@ -51,4 +51,16 @@ jobs:
               sudo chown -R \$USER:\$USER '${APP_DIR}'
               rm -rf '${APP_DIR}'/*
             "
+      - name: Upload Repo   
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          rm -rf .git .github || true
+          rsync -az --delete -e "ssh -i ~/.ssh/id_vm -p ${{ secrets.SSH_PORT || 22 }} -o StrictHostKeyChecking=yes" \
+            ./ "$SSH_USER@$SSH_HOST:${APP_DIR}/"   
+
+        
+        
+        
        
