@@ -3,16 +3,16 @@ name: Deploying to Fatlumat VM
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch: 
+  workflow_dispatch:
 
-permissions: 
+permissions:
   contents: read
 
-env: 
-  APP_DIR: /opt/apps/testing 
+env:
+  APP_DIR: /opt/apps/testing
   PROJECT_NAME: ${{ github.event.repository.name }}
 
-jobs: 
+jobs:
   deploy:
     runs-on: ubuntu-latest
 
@@ -25,16 +25,14 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
-        run:  
+        run: |
+          set -euo pipefail
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_vm
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_vm
           chmod 600 ~/.ssh/id_vm
           # Pin server keys into known_hosts (ed25519,rsa,ecdsa)
           ssh-keyscan -H -t ed25519,rsa,ecdsa "$SSH_HOST" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
           ssh-keygen -lf ~/.ssh/known_hosts || true
-          
-
-  
-
-  
+          # Example: verify connectivity (optional)
+          # ssh -i ~/.ssh/id_vm "$SSH_USER@$SSH_HOST" 'echo ok'
