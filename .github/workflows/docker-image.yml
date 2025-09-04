@@ -36,9 +36,19 @@ jobs:
           ssh-keygen -lf ~/.ssh/known_hosts || true
           # Example: verify connectivity (optional)
           # ssh -i ~/.ssh/id_vm "$SSH_USER@$SSH_HOST" 'echo ok'
-          
-      - name: prepare remote dir
+
+      - name: Prepare remote dir (and ensure rsync)
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh -i ~/.ssh/id_vm -p "${{ secrets.SSH_PORT || 22 }}" -o StrictHostKeyChecking=yes \
+            "$SSH_USER@$SSH_HOST" "
+              set -e
+              sudo apt-get update -y >/dev/null 2>&1 || true
+              sudo apt-get install -y rsync >/dev/null 2>&1 || true
+              sudo mkdir -p '${APP_DIR}'
+              sudo chown -R \$USER:\$USER '${APP_DIR}'
+              rm -rf '${APP_DIR}'/*
+            "
        
